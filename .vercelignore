@@ -1,0 +1,9 @@
+.git
+.github
+node_modules
+.gitignore
+README.md
+.next
+.vscode
+.cursor
+*.log 

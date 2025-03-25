@@ -1,0 +1,50 @@
+---
+description: Component Naming
+globs: 
+alwaysApply: false
+---
+Rule: Component Naming and Documentation in components.md
+
+    Page Breakdown into Components:
+        Each page should be divided into smaller, reusable components such as Sections, Cards, Widgets, etc.
+        Break down the UI logically into components (e.g., Header, Footer, Sidebar, CardItem, UserProfile, etc.).
+
+    Descriptive Component Names:
+        Each component should have a descriptive name that clearly defines its purpose on the page (e.g., RightSidebar, ProductCard, UserInfoSection).
+
+    Markdown Documentation:
+        All component documentation should be collected and stored in a single file named components.md.
+        Page Name should be listed at the top of the documentation whenever new components are added, followed by a list of components used on that page.
+        Under each page, list all components used with a description of what the component does.
+
+    Structure in components.md:
+        At the top of the file, maintain an overview of Page Names and their corresponding components.
+        Each component should be documented with the following information:
+            Component Name: A clear, descriptive name.
+            Description: A brief description of the component's role or functionality.
+
+    Format Example:
+
+Example Markdown File components.md:
+
+# Component Documentation
+
+## Homepage
+
+- **Header**: Displays the main navigation and logo at the top of the page.
+- **FeaturedCard**: A card displaying the main feature of the homepage.
+- **ProductGrid**: A section showcasing a grid of available products.
+- **UserTestimonialCard**: A card containing user feedback and testimonials.
+- **Footer**: Contains contact information and additional site links.
+
+## AboutPage
+
+- **AboutSection**: Describes the mission and values of the company.
+- **TeamMemberCard**: A card displaying individual team member details.
+- **FAQAccordion**: A collapsible FAQ section for user questions.
+  
+## ContactPage
+
+- **ContactForm**: A form to allow users to send messages.
+- **MapSection**: Displays a map of the company's location.
+- **ContactInfo**: Displays phone number and email contact.

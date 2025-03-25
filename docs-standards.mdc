@@ -1,0 +1,162 @@
+# Documentation Standards and Rules
+
+## General Documentation Rules
+- All documentation must be written in Markdown
+- Use relative links when referencing other documents
+- Keep documentation up to date with code changes
+- Use consistent formatting across all documents
+
+## Documentation Files and Their Purposes
+
+### PRD.md
+- Location: `docs/PRD.md`
+- Update Frequency: When features are added/modified
+- Required Sections:
+  - Overview
+  - Goals and Objectives
+  - User Stories
+  - Features and Requirements
+  - Technical Requirements
+  - Timeline
+  - Success Metrics
+- Rules:
+  - Each feature must have clear acceptance criteria
+  - User stories must follow "As a [user], I want [action] so that [benefit]" format
+  - Technical requirements must link to relevant ADRs
+
+### CHANGELOG.md
+- Location: `docs/CHANGELOG.md`
+- Update Frequency: With every significant change
+- Format: Keep a Changelog (keepachangelog.com)
+- Sections:
+  - Added
+  - Changed
+  - Deprecated
+  - Removed
+  - Fixed
+  - Security
+- Rules:
+  - Follow semantic versioning
+  - Link to relevant PRs/Issues
+  - Date each entry (YYYY-MM-DD)
+
+### ROADMAP.md
+- Location: `docs/ROADMAP.md`
+- Update Frequency: Monthly or with major changes
+- Priority Levels:
+  - P0: Critical
+  - P1: High
+  - P2: Medium
+  - P3: Low
+- Rules:
+  - Keep phases clearly defined
+  - Include timelines for each phase
+  - Mark completed items with [x]
+  - Link to relevant PRD sections
+
+### ARCHITECTURE.md
+- Location: `docs/ARCHITECTURE.md`
+- Update Frequency: When architecture changes
+- Required Sections:
+  - System Components
+  - Data Flow
+  - Technology Stack
+  - Security
+  - Deployment
+- Rules:
+  - Include system diagrams
+  - Link to relevant ADRs
+  - Document all external dependencies
+  - Update when new components are added
+
+### components.md
+- Location: `docs/components.md`
+- Update Frequency: When components are added/modified
+- Required Component Info:
+  - Name and Description
+  - Status (Stable/In Development/Deprecated)
+  - Props/Parameters
+  - Usage Examples
+  - Dependencies
+- Rules:
+  - Group components by type
+  - Include component location in codebase
+  - Document breaking changes
+  - Link to relevant tests
+
+### CONTRIBUTING.md
+- Location: `docs/CONTRIBUTING.md`
+- Update Frequency: When processes change
+- Required Sections:
+  - Setup Instructions
+  - Branch Naming
+  - Commit Messages
+  - PR Process
+  - Code Standards
+- Rules:
+  - Keep setup steps up to date
+  - Include all prerequisites
+  - Link to relevant guides
+
+### TESTING.md
+- Location: `docs/TESTING.md`
+- Update Frequency: When test requirements change
+- Required Sections:
+  - Test Types
+  - Coverage Requirements
+  - Running Tests
+  - CI/CD Pipeline
+- Rules:
+  - Document all test commands
+  - Specify minimum coverage
+  - Include mocking guidelines
+
+## Specialized Documentation Directories
+
+### technical-specs/
+- Location: `docs/technical-specs/`
+- Purpose: Detailed technical documentation
+- Rules:
+  - One spec per feature/component
+  - Include implementation details
+  - Link to relevant PRD sections
+
+### api-docs/
+- Location: `docs/api-docs/`
+- Purpose: API documentation
+- Rules:
+  - Follow OpenAPI/Swagger format
+  - Include request/response examples
+  - Document all endpoints
+  - Keep versioning information
+
+### guides/
+- Location: `docs/guides/`
+- Purpose: Developer guides and tutorials
+- Rules:
+  - Include step-by-step instructions
+  - Add screenshots when helpful
+  - Keep examples up to date
+  - Group by category
+
+### decisions/
+- Location: `docs/decisions/`
+- Purpose: Architecture Decision Records
+- Rules:
+  - Use YYYY-MM-DD-title.md format
+  - Include status, context, decision
+  - Number sequentially
+  - Link related decisions
+
+## Documentation Update Process
+1. Identify which files need updating based on the change
+2. Follow the specific rules for each file type
+3. Update all related documentation
+4. Verify links and references
+5. Keep the documentation in sync with code
+
+## Version Control for Documentation
+- Include documentation changes in feature PRs
+- Use clear commit messages for doc updates
+- Review documentation changes with code reviews
+- Keep documentation changes atomic 
