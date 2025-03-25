@@ -2,16 +2,31 @@
 
 import { useState } from 'react';
 
-export default function Header() {
+interface HeaderProps {
+  onMobileMenuToggle: () => void;
+  isMobileMenuOpen: boolean;
+}
+
+export default function Header({ onMobileMenuToggle, isMobileMenuOpen }: HeaderProps) {
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   
   return (
-    <header className="bg-white shadow-sm h-16 flex items-center justify-between px-6">
+    <header className="bg-white shadow-sm h-16 flex items-center justify-between px-6 fixed top-0 left-0 right-0 z-20">
       <div className="flex items-center">
-        <button className="mr-4 lg:hidden">
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
+        <button 
+          className="mr-4 lg:hidden text-gray-500 hover:text-gray-700 focus:outline-none"
+          onClick={onMobileMenuToggle}
+          aria-label="Toggle mobile menu"
+        >
+          {isMobileMenuOpen ? (
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          ) : (
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          )}
         </button>
         
         <div className="relative">
@@ -23,7 +38,7 @@ export default function Header() {
           <input 
             type="text" 
             placeholder="Search..." 
-            className="pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="hidden md:block pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           />
         </div>
       </div>

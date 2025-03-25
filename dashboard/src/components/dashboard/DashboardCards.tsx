@@ -7,11 +7,11 @@ import MetricCard from './MetricCard';
 const DashboardCards = () => {
   return (
     <div className="w-full bg-gray-50 rounded-lg">
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-3 p-4">
+      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-3 p-4">
         {/* Column 1 */}
-        <div className="flex flex-col gap-3 h-64">
+        <div className="flex flex-col gap-3 h-auto md:h-64">
           {/* Top Card - Takes 1/2 of the column height */}
-          <div className="flex-1">
+          <div className="flex-1 min-h-[120px] md:min-h-0">
             <MetricCard 
               icon={<Star size={18} />}
               iconBgColor="bg-amber-200"
@@ -22,7 +22,7 @@ const DashboardCards = () => {
           </div>
           
           {/* Bottom Card - Takes 1/2 of the column height */}
-          <div className="flex-1">
+          <div className="flex-1 min-h-[120px] md:min-h-0">
             <MetricCard 
               icon={<Droplet size={18} />}
               iconBgColor="bg-emerald-200"
@@ -38,9 +38,9 @@ const DashboardCards = () => {
         </div>
         
         {/* Column 2 */}
-        <div className="flex flex-col gap-3 h-64">
+        <div className="flex flex-col gap-3 h-auto md:h-64">
           {/* Top Card */}
-          <div className="flex-1">
+          <div className="flex-1 min-h-[120px] md:min-h-0">
             <MetricCard 
               icon={<ShoppingBag size={18} />}
               iconBgColor="bg-blue-200"
@@ -55,7 +55,7 @@ const DashboardCards = () => {
           </div>
           
           {/* Bottom Card */}
-          <div className="flex-1">
+          <div className="flex-1 min-h-[120px] md:min-h-0">
             <MetricCard 
               icon={<BarChart3 size={18} />}
               iconBgColor="bg-rose-200"
@@ -71,9 +71,9 @@ const DashboardCards = () => {
         </div>
         
         {/* Column 3 */}
-        <div className="flex flex-col gap-3 h-64">
+        <div className="flex flex-col gap-3 h-auto md:h-64">
           {/* Top Card */}
-          <div className="flex-1">
+          <div className="flex-1 min-h-[120px] md:min-h-0">
             <MetricCard 
               icon={<Tag size={18} />}
               iconBgColor="bg-orange-200"
@@ -88,7 +88,7 @@ const DashboardCards = () => {
           </div>
           
           {/* Bottom Card */}
-          <div className="flex-1">
+          <div className="flex-1 min-h-[120px] md:min-h-0">
             <MetricCard 
               icon={<Users size={18} />}
               iconBgColor="bg-purple-200"
@@ -104,9 +104,9 @@ const DashboardCards = () => {
         </div>
         
         {/* Column 4 - Large Card */}
-        <div className="bg-gradient-to-r from-cyan-500 to-blue-600 rounded-md shadow-sm flex flex-col justify-center text-white h-64">
+        <div className="bg-gradient-to-r from-cyan-500 to-blue-600 rounded-md shadow-sm flex flex-col justify-center text-white h-auto md:h-64 min-h-[240px]">
           <div className="text-center p-4">
-            <p className="text-2xl font-bold mb-1">15,898,000 CFA</p>
+            <p className="text-xl sm:text-2xl font-bold mb-1">15,898,000 CFA</p>
             <p className="text-xs mb-2">Total Revenue</p>
             <p className="text-xs mb-4 opacity-80">(Monthly Sales Value)</p>
             <div className="border-t border-white/20 pt-3">

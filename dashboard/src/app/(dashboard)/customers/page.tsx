@@ -23,12 +23,12 @@ export default function CustomersPage() {
   
   // Sample customer data
   const customers: Customer[] = [
-    {
+    { 
       id: '1001',
-      name: 'Chez Maman Restaurant',
+      name: 'Chez Maman Restaurant', 
       contact: 'Marie Dupont',
-      email: 'contact@chezmaman.com',
-      phone: '+221 78 123 4567',
+      email: 'contact@chezmaman.com', 
+      phone: '+221 78 123 4567', 
       orders: 12,
       spent: '145,000 CFA',
       lastOrder: 'March 15, 2024',
@@ -47,9 +47,9 @@ export default function CustomersPage() {
     },
     {
       id: '1003',
-      name: 'Le Petit Café',
+      name: 'Le Petit Café', 
       contact: 'Sophie Mendy',
-      email: 'info@lepetitcafe.com',
+      email: 'info@lepetitcafe.com', 
       phone: '+221 76 234 5678',
       orders: 8,
       spent: '67,200 CFA',
@@ -300,13 +300,13 @@ export default function CustomersPage() {
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Customers</h1>
+          <h1 className="text-2xl font-bold">Customers</h1>
         <a href="#" className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md flex items-center">
           <Plus size={16} className="mr-2" />
           Add Customer
         </a>
       </div>
-      
+
       <div className="bg-white rounded-lg shadow-sm overflow-hidden">
         {/* Search and Filter Bar */}
         <div className="border-b border-gray-200 p-4 flex flex-col sm:flex-row gap-4">
@@ -335,10 +335,10 @@ export default function CustomersPage() {
               <option value="all">All Customers</option>
               <option value="active">Active</option>
               <option value="inactive">Inactive</option>
-            </select>
-          </div>
+              </select>
         </div>
-        
+      </div>
+
         {/* Customer Table */}
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
@@ -378,7 +378,7 @@ export default function CustomersPage() {
                       <div className="flex items-center text-sm text-gray-500">
                         <Phone size={14} className="text-gray-400 mr-1" />
                         <span>{customer.phone}</span>
-                      </div>
+                    </div>
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{customer.orders}</td>
