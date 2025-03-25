@@ -7,7 +7,8 @@
     "build": "next build",
     "vercel-build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "echo 'No tests specified - build should proceed' && exit 0"
   },
   "dependencies": {
     "chart.js": "^4.4.8",
