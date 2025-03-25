@@ -6,9 +6,8 @@
     "dev": "next dev --port 3000",
     "build": "next build",
     "vercel-build": "next build",
-    "start": "next start",
-    "lint": "next lint",
-    "test": "echo 'No tests specified - build should proceed' && exit 0"
+    "start": "next start -p ${PORT:-3000}",
+    "lint": "next lint"
   },
   "dependencies": {
     "chart.js": "^4.4.8",

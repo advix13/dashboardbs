@@ -1,0 +1,8 @@
+{
+  "version": 1,
+  "type": "docker-compose",
+  "directory": "/app",
+  "compose_file": "docker-compose.yml",
+  "auto_deploy": true,
+  "ignore_build_errors": true
+} 
