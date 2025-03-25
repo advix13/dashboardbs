@@ -70,9 +70,9 @@ const DashboardCards = () => {
           </div>
         </div>
         
-        {/* Column 3 */}
-        <div className="flex flex-col gap-3 h-auto md:h-64">
-          {/* Top Card */}
+        {/* Column 3 - Pending Orders & Active Customers */}
+        <div className="grid grid-cols-2 md:grid-cols-1 gap-3 h-auto md:h-64 col-span-2 md:col-span-1">
+          {/* Pending Orders */}
           <div className="flex-1 min-h-[120px] md:min-h-0">
             <MetricCard 
               icon={<Tag size={18} />}
@@ -87,7 +87,7 @@ const DashboardCards = () => {
             />
           </div>
           
-          {/* Bottom Card */}
+          {/* Active Customers */}
           <div className="flex-1 min-h-[120px] md:min-h-0">
             <MetricCard 
               icon={<Users size={18} />}
@@ -102,18 +102,38 @@ const DashboardCards = () => {
             />
           </div>
         </div>
-        
-        {/* Column 4 - Large Card */}
-        <div className="bg-gradient-to-r from-cyan-500 to-blue-600 rounded-md shadow-sm flex flex-col justify-center text-white h-auto md:h-64 min-h-[240px]">
-          <div className="text-center p-4">
-            <p className="text-xl sm:text-2xl font-bold mb-1">15,898,000 CFA</p>
-            <p className="text-xs mb-2">Total Revenue</p>
-            <p className="text-xs mb-4 opacity-80">(Monthly Sales Value)</p>
-            <div className="border-t border-white/20 pt-3">
-              <p className="text-xs">Monthly Growth:</p>
-              <div className="flex items-center justify-center">
-                <TrendingUp size={14} className="mr-1" />
-                <p className="text-base font-medium">+8.7%</p>
+
+        {/* Column 4 - Revenue Card (Desktop) */}
+        <div className="hidden md:block h-64">
+          <div className="bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-lg p-6 h-full">
+            <div className="flex flex-col justify-center h-full">
+              <h3 className="text-3xl font-bold mb-2">15,898,000 CFA</h3>
+              <p className="text-lg mb-1">Total Revenue</p>
+              <p className="text-sm text-blue-100 mb-6">(Monthly Sales Value)</p>
+              <div className="flex items-center">
+                <p className="text-lg mr-2">Monthly Growth:</p>
+                <div className="flex items-center text-green-300">
+                  <TrendingUp size={20} className="mr-1" />
+                  <span className="text-lg font-semibold">+8.7%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Revenue Card (Mobile Only) */}
+      <div className="md:hidden p-4 pt-0">
+        <div className="bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-lg p-6">
+          <div className="flex flex-col items-center text-center">
+            <h3 className="text-3xl font-bold mb-2">15,898,000 CFA</h3>
+            <p className="text-lg mb-1">Total Revenue</p>
+            <p className="text-sm text-blue-100 mb-6">(Monthly Sales Value)</p>
+            <div className="flex items-center">
+              <p className="text-lg mr-2">Monthly Growth:</p>
+              <div className="flex items-center text-green-300">
+                <TrendingUp size={20} className="mr-1" />
+                <span className="text-lg font-semibold">+8.7%</span>
               </div>
             </div>
           </div>
