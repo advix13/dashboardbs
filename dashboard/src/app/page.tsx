@@ -12,7 +12,7 @@ export default function HomePage() {
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-2xl font-bold">Dashboard</h1>
-          <p className="text-gray-500">Welcome back to BlueSpring dashboard</p>
+          <p className="text-gray-500">Welcome to BlueSpring dashboard</p>
         </div>
         <div className="flex items-center space-x-2">
           <select className="px-3 py-2 border border-gray-300 rounded-md bg-white text-sm">

@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -32,6 +32,12 @@ interface ProductPerformanceProps {
 }
 
 export default function ProductPerformanceChart({ data, title = 'Product Performance' }: ProductPerformanceProps) {
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
   // Sort data by revenue
   const sortedData = [...data].sort((a, b) => b.revenue - a.revenue);
   
@@ -60,7 +66,7 @@ export default function ProductPerformanceChart({ data, title = 'Product Perform
         align: 'start' as const,
         font: {
           size: 14,
-          weight: '500'
+          weight: 'bold' as const
         },
         padding: {
           bottom: 20
@@ -149,6 +155,10 @@ export default function ProductPerformanceChart({ data, title = 'Product Perform
       },
     ],
   };
+
+  if (!isClient) {
+    return <div className="h-80 flex items-center justify-center">Loading chart...</div>;
+  }
 
   return (
     <div className="h-80">

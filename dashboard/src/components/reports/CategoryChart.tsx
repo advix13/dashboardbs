@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Chart as ChartJS,
   ArcElement,
@@ -25,6 +25,12 @@ interface CategoryChartProps {
 }
 
 export default function CategoryChart({ data }: CategoryChartProps) {
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+  
   // Chart options
   const options = {
     responsive: true,
@@ -93,6 +99,10 @@ export default function CategoryChart({ data }: CategoryChartProps) {
   const formattedTotal = new Intl.NumberFormat('en-US', {
     maximumFractionDigits: 0
   }).format(totalValue / 1000);
+
+  if (!isClient) {
+    return <div className="relative h-80 p-2 flex items-center justify-center">Loading chart...</div>;
+  }
 
   return (
     <div className="relative h-80 p-2">

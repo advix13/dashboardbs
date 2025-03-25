@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -27,18 +27,22 @@ ChartJS.register(
 );
 
 interface SalesReportChartProps {
-  currentPeriodData: number[];
-  previousPeriodData: number[];
-  labels: string[];
+  data: {
+    month: string;
+    water: number;
+    ice: number;
+    accessories: number;
+  }[];
   title?: string;
 }
 
-export default function SalesReportChart({ 
-  currentPeriodData, 
-  previousPeriodData, 
-  labels,
-  title = 'Sales Performance' 
-}: SalesReportChartProps) {
+export default function SalesReportChart({ data, title = 'Sales Trend' }: SalesReportChartProps) {
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+  
   // Chart options
   const options = {
     responsive: true,
@@ -63,7 +67,7 @@ export default function SalesReportChart({
         align: 'start' as const,
         font: {
           size: 14,
-          weight: '500'
+          weight: 'bold' as const
         },
         padding: {
           bottom: 20
@@ -139,12 +143,12 @@ export default function SalesReportChart({
     }
   };
 
-  const data = {
-    labels,
+  const chartData = {
+    labels: data.map(item => item.month),
     datasets: [
       {
-        label: 'Current Period',
-        data: currentPeriodData,
+        label: 'Water',
+        data: data.map(item => item.water),
         borderColor: 'rgba(59, 130, 246, 1)',
         backgroundColor: 'rgba(59, 130, 246, 0.1)',
         fill: true,
@@ -153,8 +157,8 @@ export default function SalesReportChart({
         pointBorderWidth: 1,
       },
       {
-        label: 'Previous Period',
-        data: previousPeriodData,
+        label: 'Ice',
+        data: data.map(item => item.ice),
         borderColor: 'rgba(107, 114, 128, 1)',
         backgroundColor: 'rgba(107, 114, 128, 0)',
         borderDash: [5, 5],
@@ -163,12 +167,26 @@ export default function SalesReportChart({
         pointBorderColor: '#fff',
         pointBorderWidth: 1,
       },
+      {
+        label: 'Accessories',
+        data: data.map(item => item.accessories),
+        borderColor: 'rgba(156, 163, 175, 1)',
+        backgroundColor: 'rgba(156, 163, 175, 0.1)',
+        fill: true,
+        pointBackgroundColor: 'rgba(156, 163, 175, 1)',
+        pointBorderColor: '#fff',
+        pointBorderWidth: 1,
+      },
     ],
   };
 
+  if (!isClient) {
+    return <div className="h-80 flex items-center justify-center">Loading chart...</div>;
+  }
+
   return (
     <div className="h-80">
-      <Line options={options} data={data} />
+      <Line options={options} data={chartData} />
     </div>
   );
 } 

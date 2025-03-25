@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -28,6 +28,12 @@ interface CustomerAcquisitionChartProps {
 }
 
 export default function CustomerAcquisitionChart({ data }: CustomerAcquisitionChartProps) {
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+  
   // Chart options
   const options = {
     responsive: true,
@@ -87,6 +93,10 @@ export default function CustomerAcquisitionChart({ data }: CustomerAcquisitionCh
       },
     ],
   };
+
+  if (!isClient) {
+    return <div className="h-24 flex items-center justify-center">Loading chart...</div>;
+  }
 
   return (
     <div className="h-24">

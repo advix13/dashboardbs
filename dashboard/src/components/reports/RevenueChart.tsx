@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -96,6 +96,12 @@ interface RevenueChartProps {
 }
 
 export default function RevenueChart({ data, timePeriod }: RevenueChartProps) {
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
   const chartData = {
     labels: data.map((item) => item.month),
     datasets: [
@@ -131,6 +137,10 @@ export default function RevenueChart({ data, timePeriod }: RevenueChartProps) {
       },
     ],
   };
+
+  if (!isClient) {
+    return <div className="p-4 h-80 flex items-center justify-center">Loading chart...</div>;
+  }
 
   return (
     <div className="p-4 h-80">
