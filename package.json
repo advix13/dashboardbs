@@ -1,0 +1,13 @@
+{
+  "name": "dashboardbs-root",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "install": "cd dashboard && npm install",
+    "build": "cd dashboard && npm run build",
+    "start": "cd dashboard && npm start"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+} 

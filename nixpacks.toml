@@ -1,0 +1,14 @@
+[phases.setup]
+nixpkgs = ["nodejs"]
+
+[phases.install]
+cmds = ["cd dashboard && npm install"]
+
+[phases.build]
+cmds = ["cd dashboard && npm run build"]
+
+[start]
+cmd = "cd dashboard && npm start"
+
+[variables]
+NODE_ENV = "production" 
