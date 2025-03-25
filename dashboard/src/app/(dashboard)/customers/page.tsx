@@ -1,15 +1,28 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Search, Filter, Plus, User, Phone, Mail, Calendar, Package, MoreHorizontal } from 'lucide-react';
+import { Search, Filter, Plus, User, Phone, Mail, Calendar, Package, MoreHorizontal, Edit } from 'lucide-react';
 import Link from 'next/link';
+
+// Define customer type
+type Customer = {
+  id: string;
+  name: string;
+  contact: string;
+  email: string;
+  phone: string;
+  orders: number;
+  spent: string;
+  lastOrder: string;
+  status: string;
+};
 
 export default function CustomersPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterValue, setFilterValue] = useState('all');
   
   // Sample customer data
-  const customers = [
+  const customers: Customer[] = [
     {
       id: '1001',
       name: 'Chez Maman Restaurant',
@@ -110,9 +123,9 @@ export default function CustomersPage() {
   });
 
   // Customer detail component integrated into the page
-  const [selectedCustomer, setSelectedCustomer] = useState(null);
+  const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
   
-  const handleViewCustomer = (customer) => {
+  const handleViewCustomer = (customer: Customer) => {
     setSelectedCustomer(customer);
   };
   
