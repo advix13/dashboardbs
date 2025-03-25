@@ -10,10 +10,8 @@ services:
       - "3000:3000"
     environment:
       - NODE_ENV=production
-      # Add other environment variables here
-      - DATABASE_URL=${DATABASE_URL}
-      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
-      - SECRET_KEY=${SECRET_KEY}
+      # Only essential environment variables
+      - PORT=3000
     healthcheck:
       test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000"]
       interval: 30s
