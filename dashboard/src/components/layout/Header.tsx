@@ -1,6 +1,9 @@
 'use client';
 
 import { useState } from 'react';
+import { useAuth } from '@/context/AuthContext';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
+import { LogOut, User } from 'lucide-react';
 
 interface HeaderProps {
   onMobileMenuToggle: () => void;
@@ -8,7 +11,14 @@ interface HeaderProps {
 }
 
 export default function Header({ onMobileMenuToggle, isMobileMenuOpen }: HeaderProps) {
+  const { user, signOut, isLoading } = useAuth();
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  
+  const handleSignOut = async () => {
+    await signOut();
+    setIsUserMenuOpen(false);
+  };
   
   return (
     <header className="bg-white shadow-sm h-16 flex items-center justify-between px-6 fixed top-0 left-0 right-0 z-20">
@@ -108,13 +118,46 @@ export default function Header({ onMobileMenuToggle, isMobileMenuOpen }: HeaderP
             )}
           </div>
 
-          {/* Settings */}
-          <button className="text-gray-500 hover:text-gray-700 focus:outline-none p-1">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-            </svg>
-          </button>
+          {/* User Menu */}
+          <div className="relative">
+            <button 
+              onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+              className="flex items-center text-gray-700 hover:text-gray-900 focus:outline-none"
+            >
+              <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-800 mr-1">
+                {isLoading ? (
+                  <LoadingSpinner size="small" />
+                ) : (
+                  <span>{user?.email?.charAt(0).toUpperCase() || 'U'}</span>
+                )}
+              </div>
+              <span className="hidden md:inline-block text-sm font-medium ml-1">
+                {isLoading ? 'Loading...' : user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'User'}
+              </span>
+            </button>
+            
+            {isUserMenuOpen && (
+              <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10">
+                <div className="px-4 py-2 border-b border-gray-100">
+                  <p className="text-sm font-semibold">{user?.user_metadata?.full_name || 'User'}</p>
+                  <p className="text-xs text-gray-500 truncate">{user?.email}</p>
+                </div>
+                
+                <a href="/profile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
+                  <User size={16} className="mr-2" />
+                  Profile
+                </a>
+                
+                <button 
+                  onClick={handleSignOut}
+                  className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100 flex items-center"
+                >
+                  <LogOut size={16} className="mr-2" />
+                  Sign out
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </header>

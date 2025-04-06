@@ -1,34 +1,37 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { useAuth } from '@/context/AuthContext';
 import Sidebar from './Sidebar';
 import Header from './Header';
-import dynamic from 'next/dynamic';
-
-// Dynamically import the SupabaseStatus component with no SSR
-const SupabaseStatus = dynamic(
-  () => import('@/components/SupabaseStatus'),
-  { ssr: false }
-);
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
+  const { user, isLoading, error } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [showDebug, setShowDebug] = useState(false);
-  
-  // Let's add a keyboard shortcut to show/hide the debug panel
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      // Ctrl+Shift+D to toggle debug panel
-      if (e.ctrlKey && e.shiftKey && e.key === 'D') {
-        e.preventDefault();
-        setShowDebug(prev => !prev);
-      }
-    };
-    
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
 
+  // Check if we're on an auth page
+  const isAuthPage = typeof window !== 'undefined' && 
+    ['/login', '/signup', '/reset-password'].some(path => window.location.pathname === path);
+
+  // Show a loading state while checking auth
+  if (isLoading && !isAuthPage) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <LoadingSpinner size="large" className="mx-auto mb-4" />
+          <p className="text-gray-600">Loading your dashboard...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // For auth pages, don't show the sidebar and header
+  if (isAuthPage) {
+    return <>{children}</>;
+  }
+
+  // Regular dashboard layout with sidebar and header
   return (
     <div className="flex h-screen bg-gray-100">
       <Sidebar 
@@ -47,17 +50,6 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
             {children}
           </div>
         </main>
-        
-        {/* Add Supabase Status for debugging - hidden by default, toggle with Ctrl+Shift+D */}
-        {showDebug && <SupabaseStatus />}
-        
-        {/* Small indicator for debug mode */}
-        <div 
-          className="fixed bottom-1 right-1 cursor-pointer text-xs text-gray-400 hover:text-gray-600"
-          onClick={() => setShowDebug(prev => !prev)}
-        >
-          {showDebug ? 'Hide Debug' : 'Debug'}
-        </div>
       </div>
     </div>
   );
