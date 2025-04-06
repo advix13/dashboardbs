@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { supabase, Product, ProductCategory } from '@/lib/supabase';
 import { PlusCircle, Search, Filter, ShoppingBag, Droplet, Package, Tag } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -12,6 +13,8 @@ export default function ProductsPage() {
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeFilter, setActiveFilter] = useState<string | null>(null);
+  const router = useRouter();
+  const [deleteInProgress, setDeleteInProgress] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -124,6 +127,46 @@ export default function ProductsPage() {
         return 'bg-red-100 text-red-800';
       default:
         return 'bg-gray-100 text-gray-800';
+    }
+  };
+
+  const handleDeleteProduct = async (productId: string) => {
+    if (!confirm("Are you sure you want to delete this product? This action cannot be undone.")) {
+      return;
+    }
+    
+    setDeleteInProgress(productId);
+    try {
+      // First delete related product images
+      const { error: imageDeleteError } = await supabase
+        .from('product_images')
+        .delete()
+        .eq('product_id', productId);
+        
+      if (imageDeleteError) {
+        console.error('Error deleting product images:', imageDeleteError);
+        throw new Error(`Failed to delete product images: ${imageDeleteError.message}`);
+      }
+      
+      // Then delete the product
+      const { error } = await supabase
+        .from('products')
+        .delete()
+        .eq('id', productId);
+        
+      if (error) {
+        console.error('Error deleting product:', error);
+        throw new Error(`Failed to delete product: ${error.message}`);
+      }
+      
+      // Update local state after successful deletion
+      setProducts(prevProducts => prevProducts.filter(p => p.id !== productId));
+      
+    } catch (err: any) {
+      console.error('Error deleting product:', err);
+      alert(`Error deleting product: ${err.message}`);
+    } finally {
+      setDeleteInProgress(null);
     }
   };
 
@@ -253,9 +296,9 @@ export default function ProductsPage() {
                   <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Actions
                 </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
                 {filteredProducts.map((product) => (
                 <tr key={product.id} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap">
@@ -309,8 +352,18 @@ export default function ProductsPage() {
                       <Link href={`/products/${product.id}`} className="text-blue-600 hover:text-blue-900 mr-4">
                         View
                       </Link>
-                      <Link href={`/products/${product.id}/edit`} className="text-indigo-600 hover:text-indigo-900">
+                      <Link href={`/products/${product.id}/edit`} className="text-indigo-600 hover:text-indigo-900 mr-4">
                         Edit
+                      </Link>
+                      <Link 
+                        href="#"
+                        className="text-red-600 hover:text-red-900"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleDeleteProduct(product.id);
+                        }}
+                      >
+                        {deleteInProgress === product.id ? 'Deleting...' : 'Delete'}
                       </Link>
                   </td>
                 </tr>
