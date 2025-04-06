@@ -25,6 +25,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // Check if the current route is one of the auth routes
   const isAuthRoute = pathname === '/login' || pathname === '/signup' || pathname === '/reset-password';
+  
+  // These routes require auth but have special handling
+  const isSpecialAuthRoute = pathname === '/profile' || pathname === '/update-password';
 
   // Load the user on first render and set up auth state listener
   useEffect(() => {
@@ -39,8 +42,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (currentUser && isAuthRoute) {
           router.push('/');
         }
-        // If the user is not logged in and on a protected route, redirect to login
-        else if (!currentUser && !isAuthRoute) {
+        // If the user is not logged in and on a protected route (not auth or special route), redirect to login
+        else if (!currentUser && !isAuthRoute && !isSpecialAuthRoute) {
           router.push('/login');
         }
       } catch (err: any) {
@@ -63,7 +66,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
       } else {
         setUser(null);
-        if (!isAuthRoute) {
+        if (!isAuthRoute && !isSpecialAuthRoute) {
           router.push('/login');
         }
       }
