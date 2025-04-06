@@ -4,5 +4,14 @@
   "directory": "/app",
   "compose_file": "docker-compose.yml",
   "auto_deploy": true,
-  "ignore_build_errors": true
+  "ignore_build_errors": true,
+  "port": 3000,
+  "buildPack": "nextjs",
+  "environment": [
+    { "name": "NODE_ENV", "value": "production" },
+    { "name": "NEXT_PUBLIC_SUPABASE_URL", "value": "" },
+    { "name": "NEXT_PUBLIC_SUPABASE_ANON_KEY", "value": "" },
+    { "name": "NEXT_PUBLIC_APP_URL", "value": "" },
+    { "name": "PORT", "value": "3000" }
+  ]
 } 
