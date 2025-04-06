@@ -1,9 +1,9 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Bell, Droplet, Package, Users, BarChart, Truck, UserCog, FileText, Wallet, Settings, HelpCircle, MessageCircle, Share, LayoutDashboard, ShoppingBag } from 'lucide-react';
+import { Bell, Droplet, Package, Users, BarChart, Truck, UserCog, FileText, Wallet, Settings, HelpCircle, MessageCircle, Share, LayoutDashboard, ShoppingBag, ChevronDown, ChevronRight, PlusCircle, ListFilter } from 'lucide-react';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -31,12 +31,21 @@ const BlueSpringSettingCard = ({ icon, label, lastUpdated }: { icon: React.React
 
 export default function Sidebar({ isOpen, onClose }: SidebarProps) {
   const pathname = usePathname();
+  const [expandedMenus, setExpandedMenus] = useState<string[]>([]);
   
   const isActive = (path: string) => {
     if (path === '/') {
       return pathname === '/' || pathname === '';
     }
     return pathname.startsWith(path);
+  };
+
+  const toggleSubMenu = (menu: string) => {
+    if (expandedMenus.includes(menu)) {
+      setExpandedMenus(expandedMenus.filter(item => item !== menu));
+    } else {
+      setExpandedMenus([...expandedMenus, menu]);
+    }
   };
 
   return (
