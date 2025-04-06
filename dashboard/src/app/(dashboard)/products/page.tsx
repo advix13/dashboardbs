@@ -17,20 +17,38 @@ export default function ProductsPage() {
     const fetchData = async () => {
       setIsLoading(true);
       try {
+        // Check connection to Supabase
+        console.log('Checking Supabase connection...');
+        
         // Fetch categories first
-        const { data: categoryData, error: categoryError } = await supabase
+        console.log('Fetching categories...');
+        const categoryResponse = await supabase
           .from('product_categories')
           .select('*')
           .order('name');
         
-        if (categoryError) throw categoryError;
-        setCategories(categoryData || []);
+        if (categoryResponse.error) {
+          console.error('Error fetching categories:', categoryResponse.error);
+          throw new Error(`Failed to fetch categories: ${categoryResponse.error.message}`);
+        }
+        
+        console.log('Categories fetched successfully:', categoryResponse.data?.length || 0);
+        setCategories(categoryResponse.data || []);
         
         // Then fetch products
         await fetchProducts();
       } catch (err: any) {
-        setError(err.message || 'Failed to fetch data');
+        const errorMessage = err.message || 'Failed to fetch data';
         console.error('Error fetching data:', err);
+        console.error('Network status:', navigator.onLine ? 'Online' : 'Offline');
+        
+        // Add more diagnostic information for network errors
+        if (errorMessage.includes('Failed to fetch') || !navigator.onLine) {
+          setError('Network error: Please check your internet connection and verify that the Supabase service is running.');
+        } else {
+          setError(errorMessage);
+        }
+        
         setIsLoading(false);
       }
     };
@@ -41,20 +59,26 @@ export default function ProductsPage() {
   const fetchProducts = async () => {
     setIsLoading(true);
     try {
+      console.log('Fetching products...');
       let query = supabase.from('products').select('*');
       
       if (activeFilter) {
         query = query.eq('category', activeFilter);
       }
       
-      const { data, error } = await query.order('name');
+      const productsResponse = await query.order('name');
       
-      if (error) throw error;
+      if (productsResponse.error) {
+        console.error('Error fetching products:', productsResponse.error);
+        throw new Error(`Failed to fetch products: ${productsResponse.error.message}`);
+      }
       
-      setProducts(data || []);
+      console.log('Products fetched successfully:', productsResponse.data?.length || 0);
+      setProducts(productsResponse.data || []);
     } catch (err: any) {
-      setError(err.message || 'Failed to fetch products');
+      const errorMessage = err.message || 'Failed to fetch products';
       console.error('Error fetching products:', err);
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -102,6 +126,40 @@ export default function ProductsPage() {
         return 'bg-gray-100 text-gray-800';
     }
   };
+
+  // Enhanced error display with troubleshooting information
+  if (error) {
+    return (
+      <div className="bg-white rounded-lg shadow-sm p-6">
+        <div className="p-4 rounded-md bg-red-50 text-red-700">
+          <h3 className="font-bold text-lg mb-2">Error Loading Products</h3>
+          <p className="mb-4">{error}</p>
+          
+          {error.includes('Network error') && (
+            <div className="bg-red-100 p-4 rounded-md">
+              <h4 className="font-semibold mb-2">Troubleshooting Steps:</h4>
+              <ol className="list-decimal list-inside space-y-2">
+                <li>Check your internet connection</li>
+                <li>Verify that your Supabase project is running and accessible</li>
+                <li>Ensure your API keys are correct in the configuration</li>
+                <li>Try refreshing the page</li>
+                <li>Check browser console for specific error details</li>
+              </ol>
+            </div>
+          )}
+          
+          <div className="mt-4">
+            <button
+              onClick={() => window.location.reload()}
+              className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+            >
+              Refresh Page
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -165,8 +223,6 @@ export default function ProductsPage() {
           <div className="p-8 flex justify-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
           </div>
-        ) : error ? (
-          <div className="p-8 text-center text-red-600">{error}</div>
         ) : filteredProducts.length === 0 ? (
           <div className="p-8 text-center text-gray-500">
             {searchQuery ? 'No products matching your search' : 'No products found. Add your first product!'}

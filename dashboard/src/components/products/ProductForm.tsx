@@ -49,31 +49,49 @@ export default function ProductForm({ productId, isEdit = false }: ProductFormPr
     if (isEdit && productId) {
       const fetchProduct = async () => {
         setIsDataLoading(true);
+        setMessage(null);
         try {
+          console.log('Fetching product with ID:', productId);
+          
           // Fetch product
-          const { data: productData, error: productError } = await supabase
+          const productResponse = await supabase
             .from('products')
             .select('*')
-            .eq('id', productId)
-            .single();
-
-          if (productError) throw productError;
-          if (!productData) throw new Error('Product not found');
-
+            .eq('id', productId);
+            
+          if (productResponse.error) {
+            console.error('Error fetching product:', productResponse.error);
+            throw new Error(`Failed to fetch product: ${productResponse.error.message}`);
+          }
+          
+          const productData = productResponse.data?.[0];
+          if (!productData) {
+            throw new Error('Product not found');
+          }
+          
+          console.log('Product data retrieved:', productData);
           setProduct(productData);
 
           // Fetch product images
-          const { data: imageData, error: imageError } = await supabase
+          const imageResponse = await supabase
             .from('product_images')
             .select('*')
             .eq('product_id', productId)
             .order('sort_order');
-
-          if (imageError) throw imageError;
-          setProductImages(imageData || []);
+            
+          if (imageResponse.error) {
+            console.error('Error fetching product images:', imageResponse.error);
+            throw new Error(`Failed to fetch product images: ${imageResponse.error.message}`);
+          }
+          
+          console.log('Image data retrieved:', imageResponse.data || []);
+          setProductImages(imageResponse.data || []);
         } catch (error: any) {
           console.error('Error loading product:', error);
-          setMessage({ type: 'error', text: error.message || 'Failed to load product' });
+          setMessage({ 
+            type: 'error', 
+            text: error.message || 'Failed to load product. Check your internet connection and Supabase configuration.'
+          });
         } finally {
           setIsDataLoading(false);
         }
@@ -281,8 +299,45 @@ export default function ProductForm({ productId, isEdit = false }: ProductFormPr
 
   if (isDataLoading) {
     return (
-      <div className="bg-white rounded-lg shadow-sm p-6 flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      <div className="bg-white rounded-lg shadow-sm p-6 flex flex-col justify-center items-center h-64">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
+        <p className="text-gray-600">Loading product data...</p>
+      </div>
+    );
+  }
+
+  // Add a specific section for network errors
+  if (message?.type === 'error' && message.text.includes('Failed to fetch')) {
+    return (
+      <div className="bg-white rounded-lg shadow-sm p-6">
+        <div className="p-4 mb-6 rounded-md bg-red-50 text-red-700">
+          <h3 className="font-bold text-lg mb-2">Connection Error</h3>
+          <p className="mb-4">{message.text}</p>
+          <div className="bg-red-100 p-4 rounded-md">
+            <h4 className="font-semibold mb-2">Troubleshooting Steps:</h4>
+            <ol className="list-decimal list-inside space-y-2">
+              <li>Check your internet connection</li>
+              <li>Verify that your Supabase project is running and accessible</li>
+              <li>Ensure your API keys are correct in the configuration</li>
+              <li>Try refreshing the page</li>
+              <li>Check browser console for specific error details</li>
+            </ol>
+          </div>
+          <div className="mt-4 flex space-x-4">
+            <button
+              onClick={() => window.location.reload()}
+              className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+            >
+              Refresh Page
+            </button>
+            <button
+              onClick={() => router.push('/products')}
+              className="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600"
+            >
+              Back to Products
+            </button>
+          </div>
+        </div>
       </div>
     );
   }

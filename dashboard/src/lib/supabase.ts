@@ -4,7 +4,75 @@ const supabaseUrl = 'https://stvlhikgnjwweafhvcbk.supabase.co';
 const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN0dmxoaWtnbmp3d2VhZmh2Y2JrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM5NjQ4NzgsImV4cCI6MjA1OTU0MDg3OH0.Y1tui-ao4mA81N3mTI7q2jxcGZYBjf3OaBM0plKIrgg';
 
 // Create a single supabase client for interacting with your database
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    persistSession: true,
+    autoRefreshToken: true,
+  },
+  global: {
+    fetch: async (url, options = {}) => {
+      try {
+        // Add timeout to fetch requests
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+        
+        const fetchOptions = {
+          ...options,
+          signal: controller.signal,
+          headers: {
+            ...options.headers,
+            'Content-Type': 'application/json',
+            'apikey': supabaseAnonKey,
+          },
+        };
+        
+        const response = await fetch(url, fetchOptions);
+        clearTimeout(timeoutId);
+        
+        // Log any non-2xx responses for debugging
+        if (!response.ok) {
+          console.error(`Supabase API error: ${response.status} ${response.statusText}`);
+          
+          // Try to get more error details if possible
+          try {
+            const errorData = await response.json();
+            console.error('Error details:', errorData);
+          } catch (e) {
+            // Ignore if we can't parse the error response
+          }
+        }
+        
+        return response;
+      } catch (error: any) {
+        console.error('Supabase fetch error:', error);
+        if (error.name === 'AbortError') {
+          console.error('Request timed out');
+        }
+        throw error;
+      }
+    }
+  }
+});
+
+// Check and log the connection status
+export const checkSupabaseConnection = async () => {
+  try {
+    const start = Date.now();
+    const { data, error } = await supabase.from('products').select('count', { count: 'exact' }).limit(1);
+    const end = Date.now();
+    
+    if (error) {
+      console.error('Supabase connection check failed:', error);
+      return { connected: false, error: error.message, latency: end - start };
+    }
+    
+    console.log(`Supabase connection successful. Latency: ${end - start}ms`);
+    return { connected: true, latency: end - start };
+  } catch (error: any) {
+    console.error('Unexpected error checking Supabase connection:', error);
+    return { connected: false, error: error.message };
+  }
+};
 
 // Utility function to generate a unique SKU
 export const generateSKU = (name: string, category: string) => {
