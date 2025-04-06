@@ -9,7 +9,7 @@ import { ArrowLeft, Edit, Trash2, Tag, ShoppingBag, Droplet, Package } from 'luc
 export default function ProductDetailPage() {
   const params = useParams();
   const router = useRouter();
-  const productId = params.id as string;
+  const productId = typeof params.id === 'string' ? params.id : Array.isArray(params.id) ? params.id[0] : '';
   
   const [product, setProduct] = useState<Product | null>(null);
   const [productImages, setProductImages] = useState<ProductImage[]>([]);
@@ -19,30 +19,50 @@ export default function ProductDetailPage() {
   const [confirmDelete, setConfirmDelete] = useState(false);
 
   useEffect(() => {
+    if (!productId) {
+      setError("Product ID is missing or invalid");
+      setIsLoading(false);
+      return;
+    }
+
     const fetchProduct = async () => {
       setIsLoading(true);
       try {
+        console.log('Fetching product with ID:', productId);
+        
         // Fetch product
-        const { data: productData, error: productError } = await supabase
+        const productResponse = await supabase
           .from('products')
           .select('*')
           .eq('id', productId)
           .single();
 
-        if (productError) throw productError;
-        if (!productData) throw new Error('Product not found');
+        if (productResponse.error) {
+          console.error('Error fetching product:', productResponse.error);
+          throw new Error(`Failed to fetch product: ${productResponse.error.message}`);
+        }
+        
+        if (!productResponse.data) {
+          throw new Error('Product not found');
+        }
 
-        setProduct(productData);
+        setProduct(productResponse.data);
+        console.log('Product data retrieved:', productResponse.data);
 
         // Fetch product images
-        const { data: imageData, error: imageError } = await supabase
+        const imageResponse = await supabase
           .from('product_images')
           .select('*')
           .eq('product_id', productId)
           .order('sort_order');
-
-        if (imageError) throw imageError;
-        setProductImages(imageData || []);
+          
+        if (imageResponse.error) {
+          console.error('Error fetching product images:', imageResponse.error);
+          throw new Error(`Failed to fetch product images: ${imageResponse.error.message}`);
+        }
+        
+        console.log('Image data retrieved:', imageResponse.data || []);
+        setProductImages(imageResponse.data || []);
       } catch (error: any) {
         console.error('Error loading product:', error);
         setError(error.message || 'Failed to load product');

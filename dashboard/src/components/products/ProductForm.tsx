@@ -204,9 +204,9 @@ export default function ProductForm({ productId, isEdit = false }: ProductFormPr
         throw new Error('Please fill in all required fields');
       }
 
-      let productId = '';
+      let updatedProductId = productId || '';
 
-      if (isEdit) {
+      if (isEdit && productId) {
         // Update the product in Supabase
         const { data, error } = await supabase
           .from('products')
@@ -235,7 +235,7 @@ export default function ProductForm({ productId, isEdit = false }: ProductFormPr
           .select();
 
         if (error) throw error;
-        productId = (data && data.length > 0) ? data[0].id : '';
+        updatedProductId = (data && data.length > 0) ? data[0].id : productId;
         
         setMessage({ type: 'success', text: 'Product updated successfully!' });
       } else {
@@ -246,19 +246,19 @@ export default function ProductForm({ productId, isEdit = false }: ProductFormPr
           .select();
 
         if (error) throw error;
-        productId = (data && data.length > 0) ? data[0].id : '';
+        updatedProductId = (data && data.length > 0) ? data[0].id : '';
         
         setMessage({ type: 'success', text: 'Product added successfully!' });
       }
       
       // Handle product images
-      if (productImages.length > 0 && productId) {
+      if (productImages.length > 0 && updatedProductId) {
         if (isEdit) {
           // For editing: Delete existing images first
           const { error: deleteError } = await supabase
             .from('product_images')
             .delete()
-            .eq('product_id', productId);
+            .eq('product_id', updatedProductId);
             
           if (deleteError) {
             console.error('Error deleting existing images:', deleteError.message);
@@ -267,7 +267,7 @@ export default function ProductForm({ productId, isEdit = false }: ProductFormPr
         
         // Insert/re-insert product images
         const imagesToInsert = productImages.map(img => ({
-          product_id: productId,
+          product_id: updatedProductId,
           url: img.url,
           alt_text: img.alt_text || product.name,
           title: img.title || '',
@@ -285,10 +285,12 @@ export default function ProductForm({ productId, isEdit = false }: ProductFormPr
         }
       }
 
-      // For new products, reset the form
+      // For new products, reset the form or redirect
       if (!isEdit) {
         setProduct(getInitialState());
         setProductImages([]);
+        // Optionally redirect to the product page
+        router.push(`/products/${updatedProductId}`);
       }
     } catch (error: any) {
       setMessage({ type: 'error', text: error.message || 'An error occurred' });
